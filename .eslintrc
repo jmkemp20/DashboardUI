@@ -22,6 +22,7 @@
   },
   "rules": {
     "comma-dangle": "off",
+    "linebreak-style": 0,
     "jsx-a11y/anchor-is-valid": "off",
     "max-len": "off",
     "no-console": "off",

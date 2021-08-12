@@ -1,4 +1,5 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -15,7 +16,7 @@ import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
 
 const Login = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -42,7 +43,7 @@ const Login = () => {
               password: Yup.string().max(255).required('Password is required')
             })}
             onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
+              dispatch({ type: 'SET_LOGGED_IN', payload: true });
             }}
           >
             {({

@@ -10,10 +10,10 @@ import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 
-const routes = [
+const routes = (isLoggedIn) => [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <Account /> },
       { path: 'customers', element: <CustomerList /> },
@@ -25,7 +25,7 @@ const routes = [
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: !isLoggedIn ? <MainLayout /> : <Navigate to="/app/dashboard" />,
     children: [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },

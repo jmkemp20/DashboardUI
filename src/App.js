@@ -1,4 +1,5 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import { useSelector } from 'react-redux';
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
@@ -7,7 +8,9 @@ import theme from 'src/theme';
 import routes from 'src/routes';
 
 const App = () => {
-  const routing = useRoutes(routes);
+  const isLoggedIn = useSelector((state) => state.auth);
+  console.log(isLoggedIn);
+  const routing = useRoutes(routes(isLoggedIn));
 
   return (
     <ThemeProvider theme={theme}>
