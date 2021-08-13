@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -16,7 +17,7 @@ import {
   BarChart as BarChartIcon,
   Lock as LockIcon,
   Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
+  Book as BookIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
   Users as UsersIcon
@@ -36,14 +37,14 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/app/customers',
+    href: '/app/students',
     icon: UsersIcon,
-    title: 'Customers'
+    title: 'Students'
   },
   {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'Products'
+    href: '/app/library',
+    icon: BookIcon,
+    title: 'Library'
   },
   {
     href: '/app/account',
@@ -74,6 +75,11 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch({ type: 'SET_LOGGED_IN', payload: false });
+  };
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -107,16 +113,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           }}
           to="/app/account"
         />
-        <Typography
-          color="textPrimary"
-          variant="h5"
-        >
+        <Typography color="textPrimary" variant="h5">
           {user.name}
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
+        <Typography color="textSecondary" variant="body2">
           {user.jobTitle}
         </Typography>
       </Box>
@@ -136,40 +136,19 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       <Box sx={{ flexGrow: 1 }} />
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          m: 2,
-          p: 2
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          p: 1
         }}
       >
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h4"
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleLogout}
         >
-          Need more?
-        </Typography>
-        <Typography
-          align="center"
-          variant="body2"
-        >
-          Upgrade to PRO version and access 20 more screens
-        </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            pt: 2
-          }}
-        >
-          <Button
-            color="primary"
-            component="a"
-            href="https://react-material-kit.devias.io"
-            variant="contained"
-          >
-            See PRO version
-          </Button>
-        </Box>
+          Logout
+        </Button>
       </Box>
     </Box>
   );
@@ -217,7 +196,7 @@ DashboardSidebar.propTypes = {
 };
 
 DashboardSidebar.defaultProps = {
-  onMobileClose: () => { },
+  onMobileClose: () => {},
   openMobile: false
 };
 

@@ -9,7 +9,6 @@ import routes from 'src/routes';
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth);
-  console.log(isLoggedIn);
   const routing = useRoutes(routes(isLoggedIn));
 
   return (
