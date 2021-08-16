@@ -2,21 +2,20 @@ import { Helmet } from 'react-helmet';
 import {
   Box,
   Container,
-  Grid
+  Grid,
+  Typography
 } from '@material-ui/core';
-import Budget from 'src/components/dashboard//Budget';
-import LatestOrders from 'src/components/dashboard//LatestOrders';
-import LatestProducts from 'src/components/dashboard//LatestProducts';
+import TotalBooks from 'src/components/dashboard/TotalBooks';
 import Sales from 'src/components/dashboard//Sales';
-import TasksProgress from 'src/components/dashboard//TasksProgress';
-import TotalCustomers from 'src/components/dashboard//TotalCustomers';
-import TotalProfit from 'src/components/dashboard//TotalProfit';
+import BooksCheckedOut from 'src/components/dashboard/BooksCheckedOut';
+import TotalStudents from 'src/components/dashboard/TotalStudents';
+import StudentsWithBooks from 'src/components/dashboard/StudentsWithBooks';
 import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
 
 const Dashboard = () => (
   <>
     <Helmet>
-      <title>Dashboard | Material Kit</title>
+      <title>Dashboard | ClassroomLib</title>
     </Helmet>
     <Box
       sx={{
@@ -26,81 +25,27 @@ const Dashboard = () => (
       }}
     >
       <Container maxWidth={false}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Budget />
+        <Box sx={{ pb: 1 }}>
+          <Typography variant="h2">Dashboard</Typography>
+        </Box>
+        <Grid container spacing={3}>
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TotalBooks />
           </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TotalCustomers />
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TotalStudents />
           </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TasksProgress />
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <BooksCheckedOut />
           </Grid>
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <TotalProfit sx={{ height: '100%' }} />
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <StudentsWithBooks />
           </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
+          <Grid item lg={8} md={12} xl={9} xs={12}>
             <Sales />
           </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
+          <Grid item lg={4} md={6} xl={3} xs={12}>
             <TrafficByDevice sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <LatestProducts sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <LatestOrders />
           </Grid>
         </Grid>
       </Container>

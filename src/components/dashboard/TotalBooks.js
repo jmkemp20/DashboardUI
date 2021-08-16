@@ -1,16 +1,14 @@
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
   Typography
 } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import MoneyIcon from '@material-ui/icons/Money';
+import MoneyIcon from '@material-ui/icons/Book';
 import { red } from '@material-ui/core/colors';
 
-const Budget = (props) => (
+const TotalBooks = (props) => (
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -18,22 +16,22 @@ const Budget = (props) => (
     <CardContent>
       <Grid
         container
-        spacing={3}
+        spacing={2}
         sx={{ justifyContent: 'space-between' }}
       >
         <Grid item>
           <Typography
             color="textSecondary"
             gutterBottom
-            variant="h6"
+            variant="h4"
           >
-            BUDGET
+            TOTAL BOOKS
           </Typography>
           <Typography
             color="textPrimary"
-            variant="h3"
+            variant="h1"
           >
-            $24,000
+            241
           </Typography>
         </Grid>
         <Grid item>
@@ -48,32 +46,8 @@ const Budget = (props) => (
           </Avatar>
         </Grid>
       </Grid>
-      <Box
-        sx={{
-          pt: 2,
-          display: 'flex',
-          alignItems: 'center'
-        }}
-      >
-        <ArrowDownwardIcon sx={{ color: red[900] }} />
-        <Typography
-          sx={{
-            color: red[900],
-            mr: 1
-          }}
-          variant="body2"
-        >
-          12%
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="caption"
-        >
-          Since last month
-        </Typography>
-      </Box>
     </CardContent>
   </Card>
 );
 
-export default Budget;
+export default TotalBooks;

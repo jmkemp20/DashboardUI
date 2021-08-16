@@ -1,34 +1,25 @@
 import {
   Avatar,
   Card,
+  Box,
   CardContent,
   Grid,
+  LinearProgress,
   Typography
 } from '@material-ui/core';
 import { indigo } from '@material-ui/core/colors';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
-const TotalProfit = (props) => (
-  <Card {...props}>
+const StudentsWithBooks = (props) => (
+  <Card sx={{ height: '100%' }} {...props}>
     <CardContent>
-      <Grid
-        container
-        spacing={3}
-        sx={{ justifyContent: 'space-between' }}
-      >
+      <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
         <Grid item>
-          <Typography
-            color="textSecondary"
-            gutterBottom
-            variant="h6"
-          >
-            TOTAL PROFIT
+          <Typography color="textSecondary" gutterBottom variant="h4">
+            STUDENTS WITH BOOKS
           </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h3"
-          >
-            $23,200
+          <Typography color="textPrimary" variant="h1">
+            30
           </Typography>
         </Grid>
         <Grid item>
@@ -43,8 +34,11 @@ const TotalProfit = (props) => (
           </Avatar>
         </Grid>
       </Grid>
+      <Box sx={{ pt: 3 }}>
+        <LinearProgress value={20} variant="determinate" />
+      </Box>
     </CardContent>
   </Card>
 );
 
-export default TotalProfit;
+export default StudentsWithBooks;

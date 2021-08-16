@@ -3,11 +3,16 @@ import {
   Box,
   Container,
   Grid,
+  Typography,
   Pagination
 } from '@material-ui/core';
 import LibraryListToolbar from 'src/components/library/LibraryListToolbar';
 import LibraryCard from 'src/components/library/LibraryCard';
-import books from 'src/__mocks__/books';
+import fullLibrary from 'src/__mocks__/fullLibrary';
+
+const sortedLibrary = []
+  .concat(fullLibrary)
+  .sort((a, b) => (a.title > b.title ? 1 : -1));
 
 const LibraryList = () => (
   <>
@@ -22,18 +27,19 @@ const LibraryList = () => (
       }}
     >
       <Container maxWidth={false}>
+        <Box sx={{ pb: 1 }}>
+          <Typography variant="h2">Library</Typography>
+        </Box>
         <LibraryListToolbar />
         <Box sx={{ pt: 3 }}>
-          <Grid
-            container
-            spacing={4}
-          >
-            {books.map((book) => (
+          <Grid container spacing={4}>
+            {sortedLibrary.map((book) => (
               <Grid
                 item
-                key={book.id}
-                lg={4}
-                md={6}
+                key={book.isbn10 + book.isbn13}
+                lg={3}
+                md={4}
+                sm={6}
                 xs={12}
               >
                 <LibraryCard book={book} />
@@ -48,11 +54,7 @@ const LibraryList = () => (
             pt: 3
           }}
         >
-          <Pagination
-            color="primary"
-            count={3}
-            size="small"
-          />
+          <Pagination color="primary" count={3} size="small" />
         </Box>
       </Container>
     </Box>

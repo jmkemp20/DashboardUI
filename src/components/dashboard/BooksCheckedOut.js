@@ -8,9 +8,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { orange } from '@material-ui/core/colors';
-import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
+import InsertChartIcon from '@material-ui/icons/CropFreeOutlined';
 
-const TasksProgress = (props) => (
+const BooksCheckedOut = (props) => (
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -25,15 +25,15 @@ const TasksProgress = (props) => (
           <Typography
             color="textSecondary"
             gutterBottom
-            variant="h6"
+            variant="h4"
           >
-            TASKS PROGRESS
+            TOTAL BOOKS CHECKED OUT
           </Typography>
           <Typography
             color="textPrimary"
-            variant="h3"
+            variant="h1"
           >
-            75.5%
+            20%
           </Typography>
         </Grid>
         <Grid item>
@@ -50,7 +50,7 @@ const TasksProgress = (props) => (
       </Grid>
       <Box sx={{ pt: 3 }}>
         <LinearProgress
-          value={75.5}
+          value={20}
           variant="determinate"
         />
       </Box>
@@ -58,4 +58,4 @@ const TasksProgress = (props) => (
   </Card>
 );
 
-export default TasksProgress;
+export default BooksCheckedOut;

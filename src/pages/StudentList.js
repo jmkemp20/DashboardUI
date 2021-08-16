@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet';
-import { Box, Container } from '@material-ui/core';
+import { Box, Container, Typography } from '@material-ui/core';
 import StudentListResults from 'src/components/student/StudentListResults';
 import StudentListToolbar from 'src/components/student/StudentListToolbar';
-import students from 'src/__mocks__/students';
+import fullStudents from 'src/__mocks__/fullStudents';
+import columnNames from 'src/components/student/columnNames';
 
 const StudentList = () => (
   <>
@@ -17,9 +18,12 @@ const StudentList = () => (
       }}
     >
       <Container maxWidth={false}>
+        <Box sx={{ pb: 1 }}>
+          <Typography variant="h2">Students</Typography>
+        </Box>
         <StudentListToolbar />
         <Box sx={{ pt: 3 }}>
-          <StudentListResults students={students} />
+          <StudentListResults columns={columnNames} students={fullStudents} />
         </Box>
       </Container>
     </Box>

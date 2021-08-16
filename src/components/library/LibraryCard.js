@@ -1,103 +1,88 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Card,
-  CardContent,
+  CardHeader,
   Divider,
   Grid,
+  IconButton,
   Typography
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import MenuBook from '@material-ui/icons/MenuBook';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
-const LibraryCard = ({ book, ...rest }) => (
-  <Card
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%'
-    }}
-    {...rest}
-  >
-    <CardContent>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pb: 3
-        }}
-      >
-        <Avatar
-          alt="Book"
-          src={book.media}
-          variant="square"
-        />
+function LibraryCard({ book, ...rest }) {
+  const handleClick = () => {
+    console.log('delete');
+  };
+
+  return (
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%'
+      }}
+      {...rest}
+    >
+      <CardHeader
+        title={book.title}
+        subheader={book.authors}
+        action={(
+          <IconButton
+            aria-label="settings"
+            aria-haspopup="true"
+            onClick={handleClick}
+          >
+            <DeleteForever />
+          </IconButton>
+        )}
+      />
+      <Box sx={{ flexGrow: 1 }} />
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
+          <Grid
+            item
+            sx={{
+              alignItems: 'center',
+              display: 'flex'
+            }}
+          >
+            <MenuBook color="action" />
+            <Typography
+              color="textSecondary"
+              display="inline"
+              sx={{ pl: 1 }}
+              variant="body2"
+            >
+              {`${book.pages} Pages`}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              alignItems: 'center',
+              display: 'flex'
+            }}
+          >
+            <Typography
+              color="textSecondary"
+              display="inline"
+              sx={{ pl: 1 }}
+              variant="body2"
+            >
+              {book.isbn13 !== ''
+                ? `ISBN13: ${book.isbn13}`
+                : `ISBN10: ${book.isbn10}`}
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
-      <Typography
-        align="center"
-        color="textPrimary"
-        gutterBottom
-        variant="h4"
-      >
-        {book.title}
-      </Typography>
-      <Typography
-        align="center"
-        color="textPrimary"
-        variant="body1"
-      >
-        {book.description}
-      </Typography>
-    </CardContent>
-    <Box sx={{ flexGrow: 1 }} />
-    <Divider />
-    <Box sx={{ p: 2 }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <AccessTimeIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            Updated 2hr ago
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <GetAppIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            {book.totalDownloads}
-            {' '}
-            Downloads
-          </Typography>
-        </Grid>
-      </Grid>
-    </Box>
-  </Card>
-);
+    </Card>
+  );
+}
 
 LibraryCard.propTypes = {
   book: PropTypes.object.isRequired
