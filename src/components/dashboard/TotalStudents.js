@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   Avatar,
   Card,
@@ -8,7 +9,7 @@ import {
 import { green } from '@material-ui/core/colors';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
-const TotalStudents = (props) => (
+const TotalStudents = ({ total, ...props }) => (
   <Card sx={{ height: '100%' }} {...props}>
     <CardContent>
       <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
@@ -17,7 +18,7 @@ const TotalStudents = (props) => (
             TOTAL STUDENTS
           </Typography>
           <Typography color="textPrimary" variant="h1">
-            80
+            {total}
           </Typography>
         </Grid>
         <Grid item>
@@ -35,5 +36,13 @@ const TotalStudents = (props) => (
     </CardContent>
   </Card>
 );
+
+TotalStudents.propTypes = {
+  total: PropTypes.number
+};
+
+TotalStudents.defaultProps = {
+  total: 0
+};
 
 export default TotalStudents;

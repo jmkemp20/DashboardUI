@@ -73,7 +73,7 @@ function LibraryCard({ book, ...rest }) {
               sx={{ pl: 1 }}
               variant="body2"
             >
-              {book.isbn13 !== ''
+              {(book.isbn13 !== '' && book.isbn13 !== null)
                 ? `ISBN13: ${book.isbn13}`
                 : `ISBN10: ${book.isbn10}`}
             </Typography>

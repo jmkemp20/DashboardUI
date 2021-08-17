@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   Avatar,
   Card,
@@ -8,9 +9,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { indigo } from '@material-ui/core/colors';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import LibraryAddCheckIcon from '@material-ui/icons/LibraryAddCheck';
 
-const StudentsWithBooks = (props) => (
+const StudentsWithBooks = ({ total, numStudents, ...props }) => (
   <Card sx={{ height: '100%' }} {...props}>
     <CardContent>
       <Grid container spacing={3} sx={{ justifyContent: 'space-between' }}>
@@ -19,7 +20,7 @@ const StudentsWithBooks = (props) => (
             STUDENTS WITH BOOKS
           </Typography>
           <Typography color="textPrimary" variant="h1">
-            30
+            {total}
           </Typography>
         </Grid>
         <Grid item>
@@ -30,15 +31,25 @@ const StudentsWithBooks = (props) => (
               width: 56
             }}
           >
-            <AttachMoneyIcon />
+            <LibraryAddCheckIcon />
           </Avatar>
         </Grid>
       </Grid>
       <Box sx={{ pt: 3 }}>
-        <LinearProgress value={20} variant="determinate" />
+        <LinearProgress value={(total / numStudents) * 100} variant="determinate" />
       </Box>
     </CardContent>
   </Card>
 );
+
+StudentsWithBooks.propTypes = {
+  total: PropTypes.number,
+  numStudents: PropTypes.number
+};
+
+StudentsWithBooks.defaultProps = {
+  total: 0,
+  numStudents: 0
+};
 
 export default StudentsWithBooks;

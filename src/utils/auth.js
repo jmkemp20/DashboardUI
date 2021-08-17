@@ -2,8 +2,7 @@
 let initialState = {
   auth: false,
   email: '',
-  firstName: '',
-  lastName: ''
+  info: {}
 };
 
 export default function auth(currentState = initialState, action) {
@@ -27,6 +26,16 @@ export default function auth(currentState = initialState, action) {
       return {
         ...currentState,
         email: action.payload
+      };
+    case 'SET_SESSION_ID':
+      return {
+        ...currentState,
+        id: action.payload
+      };
+    case 'SET_INFO_ON_LOGIN':
+      return {
+        ...currentState,
+        info: action.payload
       };
     default:
       return currentState;

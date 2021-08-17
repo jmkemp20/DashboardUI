@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { useSelector } from 'react-redux';
 import {
   Avatar,
   Box,
@@ -9,65 +9,54 @@ import {
   Divider,
   Typography
 } from '@material-ui/core';
+import { User as AccountCircle } from 'react-feather';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-7'
-};
+const AccountProfile = (props) => {
+  const userEmail = useSelector((state) => state.email);
+  const userName = useSelector(
+    (state) => `${state.info.firstName} ${state.info.lastName}`
+  );
+  const userInfo = useSelector((state) => state.info);
 
-const AccountProfile = (props) => (
-  <Card {...props}>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
-          src={user.avatar}
+  return (
+    <Card {...props}>
+      <CardContent>
+        <Box
           sx={{
-            height: 100,
-            width: 100
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column'
           }}
-        />
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          {`${user.city} ${user.country}`}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          {`${moment().format('hh:mm A')} ${user.timezone}`}
-        </Typography>
-      </Box>
-    </CardContent>
-    <Divider />
-    <CardActions>
-      <Button
-        color="primary"
-        fullWidth
-        variant="text"
-      >
-        Upload picture
-      </Button>
-    </CardActions>
-  </Card>
-);
+          <Avatar
+            src={AccountCircle}
+            sx={{
+              height: 100,
+              width: 100
+            }}
+          />
+          <Typography color="textPrimary" gutterBottom variant="h3">
+            {userName}
+          </Typography>
+          <Typography color="textSecondary" variant="body1">
+            {userInfo.address}
+          </Typography>
+          <Typography color="textSecondary" variant="body1">
+            {userEmail}
+          </Typography>
+          <Typography color="textSecondary" variant="body1">
+            {userInfo.id}
+          </Typography>
+        </Box>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <Button color="primary" fullWidth variant="text">
+          Upload picture
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
 
 export default AccountProfile;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Box,
   Button,
@@ -10,29 +11,17 @@ import {
   TextField
 } from '@material-ui/core';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
-
 const AccountProfileDetails = (props) => {
+  const userEmail = useSelector((state) => state.email);
+  const userInfo = useSelector((state) => state.info);
+
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    firstName: userInfo.firstName,
+    lastName: userInfo.lastName,
+    email: userEmail,
+    phone: userInfo.phone,
+    address: userInfo.address,
+    country: userInfo.country
   });
 
   const handleChange = (event) => {
@@ -142,24 +131,12 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Select State"
-                name="state"
+                label="Address"
+                name="address"
                 onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
+                value={values.address}
                 variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+              />
             </Grid>
           </Grid>
         </CardContent>

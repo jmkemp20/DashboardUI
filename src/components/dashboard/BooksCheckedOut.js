@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
@@ -10,7 +11,7 @@ import {
 import { orange } from '@material-ui/core/colors';
 import InsertChartIcon from '@material-ui/icons/CropFreeOutlined';
 
-const BooksCheckedOut = (props) => (
+const BooksCheckedOut = ({ total, ...props }) => (
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -33,7 +34,7 @@ const BooksCheckedOut = (props) => (
             color="textPrimary"
             variant="h1"
           >
-            20%
+            {`${(total * 100).toFixed(2)}%`}
           </Typography>
         </Grid>
         <Grid item>
@@ -50,12 +51,20 @@ const BooksCheckedOut = (props) => (
       </Grid>
       <Box sx={{ pt: 3 }}>
         <LinearProgress
-          value={20}
+          value={(total * 100).toFixed(2)}
           variant="determinate"
         />
       </Box>
     </CardContent>
   </Card>
 );
+
+BooksCheckedOut.propTypes = {
+  total: PropTypes.number
+};
+
+BooksCheckedOut.defaultProps = {
+  total: 0
+};
 
 export default BooksCheckedOut;

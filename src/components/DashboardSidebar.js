@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -13,6 +13,7 @@ import {
   Typography
 } from '@material-ui/core';
 import {
+  User as AccountCircle,
   AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
   Lock as LockIcon,
@@ -23,12 +24,6 @@ import {
   Users as UsersIcon
 } from 'react-feather';
 import NavItem from './NavItem';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
 
 const items = [
   {
@@ -76,6 +71,8 @@ const items = [
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const userEmail = useSelector((state) => state.email);
+  const userName = useSelector((state) => `${state.info.firstName} ${state.info.lastName}`);
 
   const handleLogout = () => {
     dispatch({ type: 'SET_LOGGED_IN', payload: false });
@@ -105,7 +102,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <Avatar
           component={RouterLink}
-          src={user.avatar}
+          src={AccountCircle}
           sx={{
             cursor: 'pointer',
             width: 64,
@@ -114,10 +111,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           to="/app/account"
         />
         <Typography color="textPrimary" variant="h5">
-          {user.name}
+          {userName}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {user.jobTitle}
+          {userEmail}
         </Typography>
       </Box>
       <Divider />
