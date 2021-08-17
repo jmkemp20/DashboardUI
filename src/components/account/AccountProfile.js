@@ -29,7 +29,7 @@ const AccountProfile = (props) => {
           }}
         >
           <Avatar
-            src={AccountCircle}
+            src={AccountCircle.src}
             sx={{
               height: 100,
               width: 100

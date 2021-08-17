@@ -2,7 +2,8 @@
 let initialState = {
   auth: false,
   email: '',
-  info: {}
+  info: {},
+  students: []
 };
 
 export default function auth(currentState = initialState, action) {
@@ -36,6 +37,11 @@ export default function auth(currentState = initialState, action) {
       return {
         ...currentState,
         info: action.payload
+      };
+    case 'SET_STUDENT_LIST':
+      return {
+        ...currentState,
+        students: action.payload
       };
     default:
       return currentState;

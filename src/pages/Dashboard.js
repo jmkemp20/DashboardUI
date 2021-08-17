@@ -14,7 +14,7 @@ import Sales from 'src/components/dashboard//Sales';
 import BooksCheckedOut from 'src/components/dashboard/BooksCheckedOut';
 import TotalStudents from 'src/components/dashboard/TotalStudents';
 import StudentsWithBooks from 'src/components/dashboard/StudentsWithBooks';
-import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
+import TrafficByClassroom from 'src/components/dashboard/TrafficByClassroom';
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
@@ -97,23 +97,29 @@ const Dashboard = () => {
               <Typography variant="h2">Dashboard</Typography>
             </Box>
             <Grid container spacing={3}>
-              <Grid item lg={3} sm={6} xl={3} xs={12}>
+              <Grid item lg={6} sm={6} xl={3} xs={12}>
                 <TotalBooks total={numBooks} />
               </Grid>
-              <Grid item lg={3} sm={6} xl={3} xs={12}>
+              <Grid item lg={6} sm={6} xl={3} xs={12}>
                 <TotalStudents total={numStudents} />
               </Grid>
-              <Grid item lg={3} sm={6} xl={3} xs={12}>
-                <BooksCheckedOut total={numBooksCheckedOut / numBooks} />
+              <Grid item lg={6} sm={6} xl={3} xs={12}>
+                <BooksCheckedOut
+                  total={numBooksCheckedOut}
+                  numBooks={numBooks}
+                />
               </Grid>
-              <Grid item lg={3} sm={6} xl={3} xs={12}>
-                <StudentsWithBooks total={numStudentsWithBooks} numStudents={numStudents} />
+              <Grid item lg={6} sm={6} xl={3} xs={12}>
+                <StudentsWithBooks
+                  total={numStudentsWithBooks}
+                  numStudents={numStudents}
+                />
               </Grid>
               <Grid item lg={8} md={12} xl={9} xs={12}>
                 <Sales />
               </Grid>
               <Grid item lg={4} md={6} xl={3} xs={12}>
-                <TrafficByDevice sx={{ height: '100%' }} />
+                <TrafficByClassroom sx={{ height: '100%' }} />
               </Grid>
             </Grid>
           </Container>

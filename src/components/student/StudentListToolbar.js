@@ -7,8 +7,8 @@ import {
 import StudentListAddStudent from './StudentListAddStudent';
 import StudentListSearchStudents from './StudentListSearchStudents';
 
-const StudentListToolbar = (props) => (
-  <Box {...props}>
+const StudentListToolbar = () => (
+  <Box>
     <Box sx={{ mt: 3 }}>
       <Card>
         <CardContent>

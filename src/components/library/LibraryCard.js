@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -7,14 +7,25 @@ import {
   Divider,
   Grid,
   IconButton,
-  Typography
+  Typography,
+  Collapse
 } from '@material-ui/core';
 import MenuBook from '@material-ui/icons/MenuBook';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import LibraryBooks from '@material-ui/icons/LibraryBooks';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
 
 function LibraryCard({ book, ...rest }) {
-  const handleClick = () => {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleDelete = () => {
     console.log('delete');
+  };
+
+  const handleExpand = () => {
+    setExpanded(!expanded);
+    console.log('expand');
   };
 
   return (
@@ -33,15 +44,78 @@ function LibraryCard({ book, ...rest }) {
           <IconButton
             aria-label="settings"
             aria-haspopup="true"
-            onClick={handleClick}
+            onClick={handleDelete}
           >
             <DeleteForever />
           </IconButton>
         )}
       />
       <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <IconButton
+          aria-label="settings"
+          aria-haspopup="true"
+          onClick={handleExpand}
+        >
+          {expanded ? (
+            <ExpandLess color="action" />
+          ) : (
+            <ExpandMore color="action" />
+          )}
+        </IconButton>
+      </Box>
+      <Collapse in={expanded}>
+        <Box sx={{ p: 2 }}>
+          <Typography
+            color="textPrimary"
+            display="inline"
+            sx={{ pl: 1 }}
+            variant="body1"
+          >
+            {book.description}
+          </Typography>
+        </Box>
+      </Collapse>
       <Divider />
       <Box sx={{ p: 2 }}>
+        <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
+          <Grid
+            item
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              pt: 3
+            }}
+          >
+            <LibraryBooks color="action" />
+            <Typography
+              color="textSecondary"
+              display="inline"
+              sx={{ pl: 1 }}
+              variant="body2"
+            >
+              {`${book.copies} Copies`}
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              alignItems: 'center',
+              display: 'flex'
+            }}
+          >
+            <Typography
+              color="textSecondary"
+              display="inline"
+              sx={{ pl: 1 }}
+              variant="body2"
+            >
+              {book.isbn10 !== '' && book.isbn10 !== null
+                ? `ISBN10: ${book.isbn10}`
+                : 'ISBN10: N/A'}
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
           <Grid
             item
@@ -73,9 +147,9 @@ function LibraryCard({ book, ...rest }) {
               sx={{ pl: 1 }}
               variant="body2"
             >
-              {(book.isbn13 !== '' && book.isbn13 !== null)
+              {book.isbn13 !== '' && book.isbn13 !== null
                 ? `ISBN13: ${book.isbn13}`
-                : `ISBN10: ${book.isbn10}`}
+                : 'ISBN13: N/A'}
             </Typography>
           </Grid>
         </Grid>

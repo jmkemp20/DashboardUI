@@ -102,7 +102,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <Avatar
           component={RouterLink}
-          src={AccountCircle}
+          src={AccountCircle.src}
           sx={{
             cursor: 'pointer',
             width: 64,

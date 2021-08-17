@@ -19,16 +19,20 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = (values) => {
+    const newValues = {
+      lastLogin: Date.now(),
+      ...values
+    };
+    console.log(newValues);
     fetch('/login', {
       method: 'POST',
-      body: JSON.stringify(values),
+      body: JSON.stringify(newValues),
       headers: {
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => (res.json()))
+      .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data) {
           dispatch({ type: 'SET_EMAIL', payload: values.email });
           dispatch({ type: 'SET_INFO_ON_LOGIN', payload: data });

@@ -12,11 +12,6 @@ import {
 } from '@material-ui/core';
 import LibraryListToolbar from 'src/components/library/LibraryListToolbar';
 import LibraryCard from 'src/components/library/LibraryCard';
-import fullLibrary from 'src/__mocks__/fullLibrary';
-
-const sortedLibrary = []
-  .concat(fullLibrary)
-  .sort((a, b) => (a.title > b.title ? 1 : -1));
 
 const LibraryList = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
@@ -86,7 +81,7 @@ const LibraryList = () => {
               <Box sx={{ pt: 3 }}>
                 <Grid container spacing={4}>
                   {loadedBooks.slice((page - 1) * 12, (page - 1) * 12 + 12).map((book) => (
-                    <Grid item key={book.id} lg={3} md={4} sm={6} xs={12}>
+                    <Grid item key={book.id} xl={4} lg={6} md={6} sm={12} xs={12}>
                       <LibraryCard book={book} />
                     </Grid>
                   ))}

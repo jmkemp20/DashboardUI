@@ -11,7 +11,7 @@ import {
 import { orange } from '@material-ui/core/colors';
 import InsertChartIcon from '@material-ui/icons/CropFreeOutlined';
 
-const BooksCheckedOut = ({ total, ...props }) => (
+const BooksCheckedOut = ({ total, numBooks, ...props }) => (
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -34,7 +34,7 @@ const BooksCheckedOut = ({ total, ...props }) => (
             color="textPrimary"
             variant="h1"
           >
-            {`${(total * 100).toFixed(2)}%`}
+            {`${((total / numBooks) * 100).toFixed(2)}%`}
           </Typography>
         </Grid>
         <Grid item>
@@ -51,7 +51,7 @@ const BooksCheckedOut = ({ total, ...props }) => (
       </Grid>
       <Box sx={{ pt: 3 }}>
         <LinearProgress
-          value={(total * 100).toFixed(2)}
+          value={(total / numBooks) * 100}
           variant="determinate"
         />
       </Box>
@@ -60,11 +60,13 @@ const BooksCheckedOut = ({ total, ...props }) => (
 );
 
 BooksCheckedOut.propTypes = {
-  total: PropTypes.number
+  total: PropTypes.number,
+  numBooks: PropTypes.number
 };
 
 BooksCheckedOut.defaultProps = {
-  total: 0
+  total: 0,
+  numBooks: 0
 };
 
 export default BooksCheckedOut;

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Helmet } from 'react-helmet';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Container,
@@ -14,8 +14,9 @@ import columnNames from 'src/components/student/columnNames';
 
 const StudentList = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
-  const [loadedStudents, setLoadedStudents] = useState([]);
   const userID = useSelector((state) => state.info.id);
+  const reduxStudents = useSelector((state) => state.students);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsLoading(true);
@@ -37,7 +38,7 @@ const StudentList = () => {
           students.push(temp);
         }
         setIsLoading(false);
-        setLoadedStudents(students);
+        dispatch({ type: 'SET_STUDENT_LIST', payload: students });
       });
   }, [userID]);
 
@@ -72,7 +73,7 @@ const StudentList = () => {
             ) : (
               <StudentListResults
                 columns={columnNames}
-                students={loadedStudents}
+                students={reduxStudents}
               />
             )}
           </Box>
