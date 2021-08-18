@@ -23,7 +23,7 @@ const Sales = (props) => {
         label: 'This year'
       },
       {
-        backgroundColor: colors.grey[200],
+        backgroundColor: colors.green[200],
         data: [11, 20, 12, 29, 30, 25, 13],
         label: 'Last year'
       }
@@ -98,7 +98,7 @@ const Sales = (props) => {
             Last 7 days
           </Button>
         )}
-        title="Latest Sales"
+        title="Books Checked Out"
       />
       <Divider />
       <CardContent>
