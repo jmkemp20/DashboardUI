@@ -15,6 +15,7 @@ import columnNames from 'src/components/student/columnNames';
 const StudentList = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
   const userID = useSelector((state) => state.info.id);
+  const userFirstName = useSelector((state) => state.info.firstName);
   const reduxStudents = useSelector((state) => state.students);
   const dispatch = useDispatch();
 
@@ -56,7 +57,7 @@ const StudentList = () => {
       >
         <Container maxWidth={false}>
           <Box sx={{ pb: 1 }}>
-            <Typography variant="h2">Students</Typography>
+            <Typography variant="h2">{`${userFirstName}'s Students`}</Typography>
           </Box>
           <StudentListToolbar />
           <Box sx={{ pt: 3 }}>

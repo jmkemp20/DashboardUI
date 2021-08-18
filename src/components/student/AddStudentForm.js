@@ -38,7 +38,6 @@ const AddStudentForm = ({ handleClose }) => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setIsLoading(false);
         console.log(students);
         const tempStudents = [...students];
         const tempData = {
@@ -46,6 +45,7 @@ const AddStudentForm = ({ handleClose }) => {
           ...data
         };
         tempStudents.push(tempData);
+        setIsLoading(false);
         dispatch({ type: 'SET_STUDENT_LIST', payload: tempStudents });
         handleClose();
       });

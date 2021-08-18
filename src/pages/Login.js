@@ -20,7 +20,7 @@ const Login = () => {
 
   const handleLogin = (values) => {
     const newValues = {
-      lastLogin: Date.now(),
+      lastLogin: Math.floor(Date.now() / 1000),
       ...values
     };
     console.log(newValues);

@@ -1,5 +1,7 @@
+/* eslint no-underscore-dangle: off */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import {
   Box,
   Card,
@@ -8,7 +10,8 @@ import {
   Grid,
   IconButton,
   Typography,
-  Collapse
+  Collapse,
+  CircularProgress
 } from '@material-ui/core';
 import MenuBook from '@material-ui/icons/MenuBook';
 import DeleteForever from '@material-ui/icons/DeleteForever';
@@ -17,15 +20,30 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 
 function LibraryCard({ book, ...rest }) {
+  const userInfo = useSelector((state) => state.info.id);
   const [expanded, setExpanded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = () => {
-    console.log('delete');
+    setIsLoading(true);
+    const postData = {
+      userId: userInfo,
+      bookId: book._id
+    };
+    fetch('/deleteBook', {
+      method: 'POST',
+      body: JSON.stringify(postData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      console.log(res);
+      setIsLoading(false);
+    });
   };
 
   const handleExpand = () => {
     setExpanded(!expanded);
-    console.log('expand');
   };
 
   return (
@@ -46,7 +64,7 @@ function LibraryCard({ book, ...rest }) {
             aria-haspopup="true"
             onClick={handleDelete}
           >
-            <DeleteForever />
+            {isLoading ? <CircularProgress /> : <DeleteForever />}
           </IconButton>
         )}
       />

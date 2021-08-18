@@ -18,6 +18,7 @@ const LibraryList = () => {
   const [loadedBooks, setLoadedBooks] = useState([]);
   const [numBooks, setNumBooks] = useState(1);
   const [page, setPage] = useState(1);
+  const userFirstName = useSelector((state) => state.info.firstName);
   const userID = useSelector((state) => state.info.id);
 
   const handleChange = (event, value) => {
@@ -63,7 +64,7 @@ const LibraryList = () => {
       >
         <Container maxWidth={false}>
           <Box sx={{ pb: 1 }}>
-            <Typography variant="h2">Library</Typography>
+            <Typography variant="h2">{`${userFirstName}'s Library`}</Typography>
           </Box>
           <LibraryListToolbar />
           {isLoading ? (

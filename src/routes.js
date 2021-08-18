@@ -7,6 +7,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
 import NotFound from 'src/pages/NotFound';
 import LibraryList from 'src/pages/LibraryList';
+import LibraryAdd from 'src/pages/LibraryAdd';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 
@@ -19,6 +20,7 @@ const routes = (isLoggedIn) => [
       { path: 'students', element: <StudentList /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'library', element: <LibraryList /> },
+      { path: 'library/add', element: <LibraryAdd /> },
       { path: 'settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

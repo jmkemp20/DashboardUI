@@ -34,7 +34,7 @@ const BooksCheckedOut = ({ total, numBooks, ...props }) => (
             color="textPrimary"
             variant="h1"
           >
-            {`${((total / numBooks) * 100).toFixed(2)}%`}
+            {`(${total}) ${((total / numBooks) * 100).toFixed(2)}%`}
           </Typography>
         </Grid>
         <Grid item>
