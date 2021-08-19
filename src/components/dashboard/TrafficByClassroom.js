@@ -9,17 +9,18 @@ import {
   colors,
   useTheme
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import LaptopMacIcon from '@material-ui/icons/LaptopMac';
 import PhoneIcon from '@material-ui/icons/Phone';
 import TabletIcon from '@material-ui/icons/Tablet';
 
-const TrafficByClassroom = (props) => {
+const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [...inData],
         backgroundColor: [
           colors.indigo[500],
           colors.red[600],
@@ -30,7 +31,7 @@ const TrafficByClassroom = (props) => {
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['A Block', 'B Block', 'C Block']
+    labels: [...inLabels]
   };
 
   const options = {
@@ -77,7 +78,7 @@ const TrafficByClassroom = (props) => {
   ];
 
   return (
-    <Card {...props}>
+    <Card {...rest}>
       <CardHeader title="Books Checked Out by Classroom" />
       <Divider />
       <CardContent>
@@ -132,6 +133,11 @@ const TrafficByClassroom = (props) => {
       </CardContent>
     </Card>
   );
+};
+
+TrafficByClassroom.propTypes = {
+  inData: PropTypes.array.isRequired,
+  inLabels: PropTypes.array.isRequired
 };
 
 export default TrafficByClassroom;
