@@ -71,8 +71,6 @@ const Dashboard = () => {
           books += len;
           if (len > 0) students++;
         }
-        console.log(classCount);
-        console.log(classrooms);
         setStudentClassroomData(classCount);
         setStudentClassroomLabels(classrooms);
         setNumStudentsWithBooks(students);

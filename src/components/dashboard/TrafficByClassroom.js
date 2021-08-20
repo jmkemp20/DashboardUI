@@ -1,3 +1,5 @@
+/* eslint-disable */
+import { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Box,
@@ -7,36 +9,20 @@ import {
   Divider,
   Typography,
   colors,
+  CircularProgress,
   useTheme
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
 
 const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
+  const [classesData, setClassesData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
   const theme = useTheme();
-
-  const data = {
-    datasets: [
-      {
-        data: [...inData],
-        backgroundColor: [
-          colors.indigo[500],
-          colors.red[600],
-          colors.orange[600]
-        ],
-        borderWidth: 8,
-        borderColor: colors.common.white,
-        hoverBorderColor: colors.common.white
-      }
-    ],
-    labels: [...inLabels]
-  };
 
   const options = {
     animation: false,
-    cutoutPercentage: 80,
+    cutoutPercentage: 75,
     layout: { padding: 0 },
     legend: {
       display: true
@@ -56,26 +42,41 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
     }
   };
 
-  const devices = [
-    {
-      title: 'A Block',
-      value: 63,
-      icon: LaptopMacIcon,
-      color: colors.indigo[500]
-    },
-    {
-      title: 'B Block',
-      value: 15,
-      icon: TabletIcon,
-      color: colors.red[600]
-    },
-    {
-      title: 'C Block',
-      value: 23,
-      icon: PhoneIcon,
-      color: colors.orange[600]
+  useEffect(() => {
+    setIsLoading(true);
+    const tempData = {
+      datasets: [
+        {
+          data: [...inData],
+          backgroundColor: [
+            colors.indigo[500],
+            colors.red[600],
+            colors.orange[600]
+          ],
+          borderWidth: 8,
+          borderColor: colors.common.white,
+          hoverBorderColor: colors.common.white
+        }
+      ],
+      labels: [...inLabels]
+    };
+    setData(tempData);
+
+    const tempClasses = [];
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    const sumBooks = tempData.datasets[0].data.reduce(reducer, 0);
+    for (const i in inLabels) {
+      const tempVal = Number((tempData.datasets[0].data[i] / sumBooks) * 100).toFixed(0);
+      const tempClass = {
+        title: inLabels[i],
+        value: tempVal,
+        color: tempData.datasets[0].backgroundColor[i]
+      };
+      tempClasses.push(tempClass);
     }
-  ];
+    setClassesData(tempClasses);
+    setIsLoading(false);
+  }, [inData, inLabels]);
 
   return (
     <Card {...rest}>
@@ -88,48 +89,44 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
             position: 'relative'
           }}
         >
-          <Doughnut
-            data={data}
-            options={options}
-          />
+          <Doughnut data={data} options={options} />
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            pt: 2
-          }}
-        >
-          {devices.map(({
-            color,
-            icon: Icon,
-            title,
-            value
-          }) => (
-            <Box
-              key={title}
-              sx={{
-                p: 1,
-                textAlign: 'center'
-              }}
-            >
-              <Icon color="action" />
-              <Typography
-                color="textPrimary"
-                variant="body1"
+        {!isLoading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              pt: 2
+            }}
+          >
+            {classesData.map(({ color, title, value }) => (
+              <Box
+                key={title}
+                sx={{
+                  p: 1,
+                  textAlign: 'center'
+                }}
               >
-                {title}
-              </Typography>
-              <Typography
-                style={{ color }}
-                variant="h2"
-              >
-                {value}
-                %
-              </Typography>
-            </Box>
-          ))}
-        </Box>
+                <Typography color="textPrimary" variant="body1">
+                  {title}
+                </Typography>
+                <Typography style={{ color }} variant="h2">
+                  {value}%
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              pt: 3
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
