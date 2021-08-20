@@ -1,16 +1,16 @@
 {
-  "name": "react-material-dashboard",
-  "author": "DeviasIO",
-  "licence": "MIT",
+  "name": "classroom-lib-dashboard",
+  "author": "Joshua Kemp",
+  "licence": "JKEMP",
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start-client": "react-scripts start",
+    "build": "react-scripts build && (cd server && npm install)",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "cd server && npm run start"
   },
-  "proxy": "http://localhost:3001",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -36,12 +36,10 @@
     "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "formik": "^2.1.5",
-    "history": "^5.0.0",
     "install": "^0.13.0",
-    "lodash": "^4.17.19",
-    "moment": "^2.27.0",
     "npm": "^7.20.5",
     "nprogress": "^0.2.0",
+    "path": "^0.12.7",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-chartjs-2": "^2.10.0",
@@ -54,7 +52,6 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "^4.0.0",
     "redux": "^4.1.1",
-    "uuid": "^8.3.0",
     "yup": "^0.29.3"
   },
   "devDependencies": {
