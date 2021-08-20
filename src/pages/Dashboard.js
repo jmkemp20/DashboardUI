@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Helmet } from 'react-helmet';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Box,
   Container,
@@ -15,36 +15,19 @@ import BooksCheckedOut from 'src/components/dashboard/BooksCheckedOut';
 import TotalStudents from 'src/components/dashboard/TotalStudents';
 import StudentsWithBooks from 'src/components/dashboard/StudentsWithBooks';
 import TrafficByClassroom from 'src/components/dashboard/TrafficByClassroom';
-import { indexOf } from 'lodash';
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
-  const [loadedBooks, setLoadedBooks] = useState([]);
-  const [loadedStudents, setLoadedStudents] = useState([]);
-  const [numBooks, setNumBooks] = useState(0);
-  const [numStudents, setNumStudents] = useState(0);
-  const [numStudentsWithBooks, setNumStudentsWithBooks] = useState(0);
-  const [numBooksCheckedOut, setNumBooksCheckedOut] = useState(0);
+  const dispatch = useDispatch();
   const userID = useSelector((state) => state.info.id);
-  const [studentClassroomData, setStudentClassroomData] = useState([]);
-  const [studentClassroomLabels, setStudentClassroomLabels] = useState([]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetch('/library', {
-      method: 'POST',
-      body: JSON.stringify({ userId: userID }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setNumBooks(data.length);
-        setIsLoading(false);
-        setLoadedBooks(data);
-      });
-  }, [userID]);
+  const [dashboardCalculations, setDashboardCalculations] = useState({
+    numBooksCheckedOut: 0,
+    numStudents: 0,
+    numStudentsWithBooks: 0,
+    classroomData: [],
+    classroomLabels: [],
+    numBooks: 0
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,20 +49,41 @@ const Dashboard = () => {
             classrooms.push(String(data[num].classroom));
             classCount.push(0);
           }
-          const len = data[num]['book_list'].length;
-          if (len > 0) classCount[classrooms.indexOf(data[num].classroom)] += len;
+          const len = data[num].book_list.length;
+          if (len > 0)
+            classCount[classrooms.indexOf(data[num].classroom)] += len;
           books += len;
           if (len > 0) students++;
         }
-        setStudentClassroomData(classCount);
-        setStudentClassroomLabels(classrooms);
-        setNumStudentsWithBooks(students);
-        setNumBooksCheckedOut(books);
-        setNumStudents(data.length);
-        setIsLoading(false);
-        setLoadedStudents(data);
+        const calculations = {
+          numBooksCheckedOut: books,
+          numStudents: data.length,
+          numStudentsWithBooks: students,
+          classroomData: classCount,
+          classroomLabels: classrooms,
+          numBooks: 0
+        };
+        setDashboardCalculations(calculations);
       });
   }, [userID]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch('/library', {
+      method: 'POST',
+      body: JSON.stringify({ userId: userID }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const calculations = dashboardCalculations;
+        calculations.numBooks = data.length;
+        dispatch({ type: 'SET_DASHBOARD_CALCULATIONS', payload: calculations });
+        setIsLoading(false);
+      });
+  }, [userID, dashboardCalculations]);
 
   return (
     <>
@@ -110,28 +114,22 @@ const Dashboard = () => {
             </Box>
             <Grid container spacing={3}>
               <Grid item lg={6} sm={6} xl={3} xs={12}>
-                <TotalBooks total={numBooks} />
+                <TotalBooks />
               </Grid>
               <Grid item lg={6} sm={6} xl={3} xs={12}>
-                <TotalStudents total={numStudents} />
+                <TotalStudents />
               </Grid>
               <Grid item lg={6} sm={6} xl={3} xs={12}>
-                <BooksCheckedOut
-                  total={numBooksCheckedOut}
-                  numBooks={numBooks}
-                />
+                <BooksCheckedOut />
               </Grid>
               <Grid item lg={6} sm={6} xl={3} xs={12}>
-                <StudentsWithBooks
-                  total={numStudentsWithBooks}
-                  numStudents={numStudents}
-                />
+                <StudentsWithBooks />
               </Grid>
               <Grid item lg={8} md={12} xl={9} xs={12}>
                 <Sales />
               </Grid>
               <Grid item lg={4} md={6} xl={3} xs={12}>
-                <TrafficByClassroom inData={studentClassroomData} inLabels={studentClassroomLabels} sx={{ height: '100%' }} />
+                <TrafficByClassroom sx={{ height: '100%' }} />
               </Grid>
             </Grid>
           </Container>

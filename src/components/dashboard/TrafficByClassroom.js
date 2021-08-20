@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Box,
@@ -12,13 +13,26 @@ import {
   CircularProgress,
   useTheme
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
-const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
+const TrafficByClassroom = (...rest) => {
   const [classesData, setClassesData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const theme = useTheme();
+  const [classroomData, setClassroomData] = useState([]);
+  const [classroomLabels, setClassroomLabels] = useState([]);
+  const calculationClassroomData = useSelector(
+    (state) => state.calculations.classroomData
+  );
+  const calculationClassroomLabels = useSelector(
+    (state) => state.calculations.classroomLabels
+  );
+
+  useEffect(() => {
+    setIsLoading(true);
+    setClassroomData(calculationClassroomData);
+    setClassroomLabels(calculationClassroomLabels);
+  }, [calculationClassroomData, calculationClassroomLabels]);
 
   const options = {
     animation: false,
@@ -43,11 +57,10 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     const tempData = {
       datasets: [
         {
-          data: [...inData],
+          data: [...classroomData],
           backgroundColor: [
             colors.indigo[500],
             colors.red[600],
@@ -58,17 +71,19 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
           hoverBorderColor: colors.common.white
         }
       ],
-      labels: [...inLabels]
+      labels: [...classroomLabels]
     };
     setData(tempData);
 
     const tempClasses = [];
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     const sumBooks = tempData.datasets[0].data.reduce(reducer, 0);
-    for (const i in inLabels) {
-      const tempVal = Number((tempData.datasets[0].data[i] / sumBooks) * 100).toFixed(0);
+    for (const i in classroomLabels) {
+      const tempVal = Number(
+        (tempData.datasets[0].data[i] / sumBooks) * 100
+      ).toFixed(0);
       const tempClass = {
-        title: inLabels[i],
+        title: classroomLabels[i],
         value: tempVal,
         color: tempData.datasets[0].backgroundColor[i]
       };
@@ -76,7 +91,7 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
     }
     setClassesData(tempClasses);
     setIsLoading(false);
-  }, [inData, inLabels]);
+  }, [classroomData, classroomLabels]);
 
   return (
     <Card {...rest}>
@@ -130,11 +145,6 @@ const TrafficByClassroom = ({ inData, inLabels, ...rest }) => {
       </CardContent>
     </Card>
   );
-};
-
-TrafficByClassroom.propTypes = {
-  inData: PropTypes.array.isRequired,
-  inLabels: PropTypes.array.isRequired
 };
 
 export default TrafficByClassroom;

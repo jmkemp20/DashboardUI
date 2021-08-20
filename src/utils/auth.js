@@ -3,7 +3,15 @@ let initialState = {
   auth: false,
   email: '',
   info: {},
-  students: []
+  students: [],
+  calculations: {
+    numBooksCheckedOut: 0,
+    numStudents: 0,
+    numStudentsWithBooks: 0,
+    classroomData: [],
+    classroomLabels: [],
+    numBooks: 0
+  }
 };
 
 export default function auth(currentState = initialState, action) {
@@ -37,6 +45,11 @@ export default function auth(currentState = initialState, action) {
       return {
         ...currentState,
         info: action.payload
+      };
+    case 'SET_DASHBOARD_CALCULATIONS':
+      return {
+        ...currentState,
+        calculations: action.payload
       };
     case 'SET_STUDENT_LIST':
       return {
