@@ -46,7 +46,7 @@ const StudentList = () => {
   return (
     <>
       <Helmet>
-        <title>Students | Material Kit</title>
+        <title>Students | ClassroomLib</title>
       </Helmet>
       <Box
         sx={{

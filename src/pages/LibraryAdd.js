@@ -26,7 +26,7 @@ const LibraryAdd = () => {
   return (
     <>
       <Helmet>
-        <title>Library Add | ClassELib</title>
+        <title>Library Add | ClassroomLib</title>
       </Helmet>
       <Box
         sx={{

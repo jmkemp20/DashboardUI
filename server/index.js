@@ -11,6 +11,10 @@ const PORT = process.env.PORT || 5000;
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.static(buildPath));
 
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(buildPath + '/index.html'));
+});
+
 mongoose
   .connect(
     "mongodb+srv://jmkemp20:jajabinks@classroomlibdb.rpwpl.mongodb.net/ClassroomLibDB?retryWrites=true&w=majority",

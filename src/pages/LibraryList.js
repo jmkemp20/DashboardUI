@@ -53,7 +53,7 @@ const LibraryList = () => {
   return (
     <>
       <Helmet>
-        <title>Library | Material Kit</title>
+        <title>Library | ClassroomLib</title>
       </Helmet>
       <Box
         sx={{

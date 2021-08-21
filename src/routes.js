@@ -31,6 +31,12 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'app/account', element: <Account /> },
+      { path: 'app/students', element: <StudentList /> },
+      { path: 'app/dashboard', element: <Dashboard /> },
+      { path: 'app/library', element: <LibraryList /> },
+      { path: 'app/library/add', element: <LibraryAdd /> },
+      { path: 'app/settings', element: <Settings /> },
       { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to="/app/dashboard" /> },
       { path: '*', element: <Navigate to="/404" /> }
