@@ -1,71 +1,71 @@
-const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
 const app = express();
-const axios = require("axios");
-const ISBNConverter = require("simple-isbn").isbn;
-const { Book } = require("./models/book-model");
-const { User } = require("./models/user-model");
-const { Student } = require("./models/student-model");
+const axios = require('axios');
+const ISBNConverter = require('simple-isbn').isbn;
+const { Book } = require('./models/book-model');
+const { User } = require('./models/user-model');
+const { Student } = require('./models/student-model');
 const PORT = process.env.PORT || 5000;
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.static(buildPath));
 
-app.get('*', (req,res) =>{
+app.get('*', (req, res) => {
   res.sendFile(path.join(buildPath + '/index.html'));
 });
 
 mongoose
   .connect(
-    "mongodb+srv://jmkemp20:jajabinks@classroomlibdb.rpwpl.mongodb.net/ClassroomLibDB?retryWrites=true&w=majority",
+    'mongodb+srv://jmkemp20:jajabinks@classroomlibdb.rpwpl.mongodb.net/ClassroomLibDB?retryWrites=true&w=majority',
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useFindAndModify: false,
+      useFindAndModify: false
     }
   )
   .catch((e) => {
-    console.error("Connection Error", e.message);
+    console.error('Connection Error', e.message);
   });
 
 const db = mongoose.connection;
 
-db.on("connected", () => {
-  console.log("Connected to MONGODB");
+db.on('connected', () => {
+  console.log('Connected to MONGODB');
 });
 
-db.on("error", console.error.bind(console, "connection error:"));
+db.on('error', console.error.bind(console, 'connection error:'));
 
 app.use(express.urlencoded());
 app.use(express.json());
 
-app.post("/register", (req, res) => {
+app.post('/register', (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const tempUser = new User({
     firstName: firstName,
     lastName: lastName,
-    country: "United States",
-    address: "",
-    phone: "",
+    country: 'United States',
+    address: '',
+    phone: '',
     numClasses: 1,
-    classes: ["Main"],
+    classes: ['Main'],
     email: email,
-    password: password,
+    password: password
   });
   tempUser.save((err) => {
     if (err) throw err;
   });
   console.log(`Registered New User: ${email}`);
-  res.end("Success");
+  res.end('Success');
 });
 
-app.post("/login", (req, res) => {
+app.post('/login', (req, res) => {
   const { lastLogin, email, password } = req.body;
   User.findOne({ email: email }, (err, user) => {
-    if (err) throw err;
+    if (err) return res.send(500, { error: err });
     if (user !== null) {
       user.comparePassword(password, (err, isMatch) => {
-        if (err) throw err;
+        if (err) return res.send(500, { error: err });
         if (isMatch) {
           User.updateOne(
             { email: email },
@@ -84,11 +84,11 @@ app.post("/login", (req, res) => {
             address: user.address,
             phone: user.phone,
             numClasses: user.numClasses,
-            classes: user.classes,
+            classes: user.classes
           };
           res.send(data);
         } else {
-          res.send(false);
+          res.sendStatus(201);
         }
       });
     } else {
@@ -97,14 +97,14 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/students", (req, res) => {
+app.post('/students', (req, res) => {
   const parentId = req.body.userId;
   Student.find({ parent_id: parentId }, (err, result) => {
     res.json(result);
   });
 });
 
-app.post("/studentsBooks", (req, res) => {
+app.post('/studentsBooks', (req, res) => {
   const { parentId, studentId } = req.body;
   const returnData = [];
   Student.findOne({ _id: studentId, parent_id: parentId }, (err, result) => {
@@ -124,14 +124,14 @@ app.post("/studentsBooks", (req, res) => {
   });
 });
 
-app.post("/library", (req, res) => {
+app.post('/library', (req, res) => {
   const parentId = req.body.userId;
   Book.find({ parent_id: parentId }, (error, result) => {
     res.json(result);
   });
 });
 
-app.post("/newStudent", (req, res) => {
+app.post('/newStudent', (req, res) => {
   const { userId, name, email, className } = req.body;
   const tempStudent = new Student({
     name: name,
@@ -139,7 +139,7 @@ app.post("/newStudent", (req, res) => {
     email: email,
     classroom: className,
     num_books: 0,
-    book_list: [],
+    book_list: []
   });
   tempStudent.save((err) => {
     if (err) throw err;
@@ -149,7 +149,7 @@ app.post("/newStudent", (req, res) => {
       email: email,
       classroom: className,
       num_books: 0,
-      book_list: [],
+      book_list: []
     };
     res.send(data);
   });
@@ -159,7 +159,7 @@ app.post("/newStudent", (req, res) => {
 const isValidISBN = (str) => {
   var sum, weight, digit, check, i;
 
-  str = String(str).replace(/[^0-9X]/gi, "");
+  str = String(str).replace(/[^0-9X]/gi, '');
 
   if (str.length != 10 && str.length != 13) {
     return false;
@@ -189,13 +189,13 @@ const isValidISBN = (str) => {
     }
     check = (11 - (sum % 11)) % 11;
     if (check == 10) {
-      check = "X";
+      check = 'X';
     }
     return check == str[str.length - 1].toUpperCase();
   }
 };
 
-app.post("/newBook", (req, res) => {
+app.post('/newBook', (req, res) => {
   const { userId, title, author, isbn, date, publisher, pages, description } =
     req.body;
   if (!isValidISBN(isbn)) {
@@ -210,7 +210,7 @@ app.post("/newBook", (req, res) => {
     copies: 1,
     publisher: publisher,
     publish_date: date,
-    pages: pages,
+    pages: pages
   });
   if (String(isbn).length == 10) {
     tempBook.isbn10 = isbn;
@@ -225,76 +225,137 @@ app.post("/newBook", (req, res) => {
   });
 });
 
-app.post("/newBookAuto", async (req, res) => {
+app.post('/newBookAuto', async (req, res) => {
   const { userId, isbn } = req.body;
   if (isValidISBN(isbn)) {
-    const bookuri = "https://openlibrary.org/isbn/" + isbn + ".json";
+    const bookuri = 'https://openlibrary.org/isbn/' + isbn + '.json';
     axios.get(bookuri, {}).then((response) => {
       if (response.status == 200) {
-        const authoruri =
-          "https://openlibrary.org" + response.data.authors[0].key + ".json";
-        axios.get(authoruri, {}).then((authResponse) => {
-          if (authResponse.status == 200) {
-            const tempBook = new Book({
-              _id: mongoose.Types.ObjectId(),
-              parent_id: userId,
-              authors: authResponse.data.name,
-              title: response.data.title,
-              description: "No Description Found",
-              copies: 1,
-              publisher:
-                response.data.publishers.length > 0
-                  ? response.data.publishers[0]
-                  : "",
-              publish_date: response.data.publish_date,
-              pages: response.data.number_of_pages,
-              isbn10:
-                response.data.isbn_10.length > 0
-                  ? response.data.isbn_10[0]
-                  : "",
-              isbn13:
-                response.data.isbn_13.length > 0
-                  ? response.data.isbn_13[0]
-                  : "",
-            });
-            const myQuery = (isbn.length == 10 ? { isbn10: isbn } : { isbn13: isbn });
-            Book.findOne(myQuery, (newErr, book) => {
-              if (newErr) res.sendStatus(500);
-              if (book) {
-                book.copies += 1;
-                book.save((err) => {
-                  if (err) return res.sendStatus(500);
+        if ('authors' in response.data) {
+          const authoruri =
+            'https://openlibrary.org' + response.data.authors[0].key + '.json';
+          axios.get(authoruri, {}).then((authResponse) => {
+            if (authResponse.status == 200) {
+              const tempBook = new Book({
+                _id: mongoose.Types.ObjectId(),
+                parent_id: userId,
+                authors: authResponse.data.name,
+                title: response.data.title,
+                description: 'No Description Found',
+                copies: 1,
+                publisher:
+                  response.data.publishers.length > 0
+                    ? response.data.publishers[0]
+                    : '',
+                publish_date: response.data.publish_date,
+                pages: response.data.number_of_pages,
+                isbn10:
+                  response.data.isbn_10.length > 0
+                    ? response.data.isbn_10[0]
+                    : '',
+                isbn13:
+                  response.data.isbn_13.length > 0
+                    ? response.data.isbn_13[0]
+                    : ''
+              });
+              const myQuery =
+                isbn.length == 10 ? { isbn10: isbn } : { isbn13: isbn };
+              Book.findOne(myQuery, (newErr, book) => {
+                if (newErr) res.sendStatus(500);
+                if (book) {
+                  book.copies += 1;
+                  book.save((err) => {
+                    if (err) return res.sendStatus(500);
 
-                  console.log(`Success Auto Updated: ${tempBook.title}`);
-                  const tempData = {
-                    statusCode: 201,
-                    returnBody: {
-                      message: "Book already exists",
-                      copies: book.copies,
-                    },
-                  };
-                  return res.send(tempData);
-                });
-              } else {
-                tempBook.save((err) => {
-                  if (err) return res.sendStatus(500);
+                    console.log(`Success Auto Updated: ${tempBook.title}`);
+                    const tempData = {
+                      statusCode: 201,
+                      returnBody: {
+                        message: 'Book already exists',
+                        copies: book.copies
+                      }
+                    };
+                    return res.send(tempData);
+                  });
+                } else {
+                  tempBook.save((err) => {
+                    if (err) return res.sendStatus(500);
 
-                  console.log(`Success Auto Added: ${tempBook.title}`);
-                  const tempData = {
-                    statusCode: 200,
-                    returnBody: {
-                      title: tempBook.title,
-                      author: tempBook.authors,
-                    },
-                  };
-                  return res.send(tempData);
-                });
-              }
-            });
-          } else {
-            res.sendStatus(500);
-          }
-        });
+                    console.log(`Success Auto Added: ${tempBook.title}`);
+                    const tempData = {
+                      statusCode: 200,
+                      returnBody: {
+                        title: tempBook.title,
+                        author: tempBook.authors
+                      }
+                    };
+                    return res.send(tempData);
+                  });
+                }
+              });
+            } else {
+              res.sendStatus(500);
+            }
+          });
+        } else {
+          const tempBook = new Book({
+            _id: mongoose.Types.ObjectId(),
+            parent_id: userId,
+            authors: "",
+            title: response.data.title,
+            description: 'No Description Found',
+            copies: 1,
+            publisher:
+              response.data.publishers.length > 0
+                ? response.data.publishers[0]
+                : '',
+            publish_date: response.data.publish_date,
+            pages: response.data.number_of_pages,
+            isbn10:
+              'isbn_10' in response.data
+                ? response.data.isbn_10[0]
+                : '',
+            isbn13:
+              'isbn_13' in response.data
+                ? response.data.isbn_13[0]
+                : ''
+          });
+          const myQuery =
+            isbn.length == 10 ? { isbn10: isbn } : { isbn13: isbn };
+          Book.findOne(myQuery, (newErr, book) => {
+            if (newErr) res.sendStatus(500);
+            if (book) {
+              book.copies += 1;
+              book.save((err) => {
+                if (err) return res.sendStatus(500);
+  
+                console.log(`Success Auto Updated: ${tempBook.title}`);
+                const tempData = {
+                  statusCode: 201,
+                  returnBody: {
+                    message: 'Book already exists',
+                    copies: book.copies
+                  }
+                };
+                return res.send(tempData);
+              });
+            } else {
+              tempBook.save((err) => {
+                if (err) return res.sendStatus(500);
+  
+                console.log(`Success Auto Added: ${tempBook.title}`);
+                const tempData = {
+                  statusCode: 200,
+                  returnBody: {
+                    title: tempBook.title,
+                    author: tempBook.authors
+                  }
+                };
+                return res.send(tempData);
+              });
+            }
+          });
+        }
       } else {
         res.sendStatus(500);
       }
@@ -304,7 +365,7 @@ app.post("/newBookAuto", async (req, res) => {
   }
 });
 
-app.post("/deleteBook", (req, res) => {
+app.post('/deleteBook', (req, res) => {
   const { userId, bookId } = req.body;
   Book.deleteOne({ _id: bookId, parent_id: userId }, (err) => {
     if (err) return res.sendStatus(500);

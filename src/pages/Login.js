@@ -1,4 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -17,8 +18,11 @@ import GoogleIcon from 'src/icons/Google';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleLogin = (values) => {
+    setIsLoading(true);
     const newValues = {
       lastLogin: Math.floor(Date.now() / 1000),
       ...values
@@ -31,12 +35,19 @@ const Login = () => {
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          dispatch({ type: 'SET_EMAIL', payload: values.email });
-          dispatch({ type: 'SET_INFO_ON_LOGIN', payload: data });
-          dispatch({ type: 'SET_LOGGED_IN', payload: true });
+      .then((res) => {
+        if (res.ok) {
+          res.json().then((data) => {
+            if (data) {
+              setIsLoading(false);
+              dispatch({ type: 'SET_EMAIL', payload: values.email });
+              dispatch({ type: 'SET_INFO_ON_LOGIN', payload: data });
+              dispatch({ type: 'SET_LOGGED_IN', payload: true });
+            }
+          });
+        } else {
+          console.log("unable to login");
+          setIsLoading(false);
         }
       });
   };
@@ -70,6 +81,7 @@ const Login = () => {
             })}
             onSubmit={(values) => {
               handleLogin(values);
+              setSubmitting(false);
             }}
           >
             {({
@@ -172,8 +184,7 @@ const Login = () => {
                   </Button>
                 </Box>
                 <Typography color="textSecondary" variant="body1">
-                  Don&apos;t have an account?
-                  {' '}
+                  Don&apos;t have an account?{' '}
                   <Link component={RouterLink} to="/register" variant="h6">
                     Sign up
                   </Link>
