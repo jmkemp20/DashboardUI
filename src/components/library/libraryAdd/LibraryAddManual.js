@@ -11,12 +11,24 @@ import {
   Divider,
   Grid,
   TextField,
-  CircularProgress
+  CircularProgress,
+  Snackbar
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const LibraryAddManual = () => {
   const userInfo = useSelector((state) => state.info.id);
   const [isLoading, setIsLoading] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarText, setSnackBarText] = useState('');
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handleNewBook = (enteredValues) => {
     console.log(isLoading);
@@ -36,8 +48,9 @@ const LibraryAddManual = () => {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then((res) => {
-      console.log(res);
+    }).then(() => {
+      setSnackBarText('New Book Added!');
+      setOpenSnackBar(true);
       setIsLoading(false);
     });
   };
@@ -208,6 +221,26 @@ const LibraryAddManual = () => {
           <CircularProgress />
         </Box>
       )}
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+        message={snackBarText}
+        action={(
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleCloseSnackBar}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      />
     </>
   );
 };

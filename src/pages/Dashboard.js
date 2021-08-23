@@ -20,14 +20,6 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true); // Set starting state to true
   const dispatch = useDispatch();
   const userID = useSelector((state) => state.info.id);
-  const [dashboardCalculations, setDashboardCalculations] = useState({
-    numBooksCheckedOut: 0,
-    numStudents: 0,
-    numStudentsWithBooks: 0,
-    classroomData: [],
-    classroomLabels: [],
-    numBooks: 0
-  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -63,28 +55,25 @@ const Dashboard = () => {
           classroomLabels: classrooms,
           numBooks: 0
         };
-        setDashboardCalculations(calculations);
+        fetch('/library', {
+          method: 'POST',
+          body: JSON.stringify({ userId: userID }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then((res) => res.json())
+          .then((bookData) => {
+            calculations.numBooks = bookData.length;
+            dispatch({
+              type: 'SET_DASHBOARD_CALCULATIONS',
+              payload: calculations
+            });
+            setIsLoading(false);
+          });
       });
   }, [userID]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetch('/library', {
-      method: 'POST',
-      body: JSON.stringify({ userId: userID }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const calculations = dashboardCalculations;
-        calculations.numBooks = data.length;
-        dispatch({ type: 'SET_DASHBOARD_CALCULATIONS', payload: calculations });
-        setIsLoading(false);
-      });
-  }, [userID, dashboardCalculations]);
-
+  
   return (
     <>
       <Helmet>

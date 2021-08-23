@@ -1,4 +1,5 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -11,12 +12,24 @@ import {
   FormHelperText,
   Link,
   TextField,
-  Typography
+  Typography,
+  Snackbar
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarText, setSnackBarText] = useState('');
+
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handleRegister = (values) => {
     fetch('/register', {
@@ -26,6 +39,8 @@ const Register = () => {
         'Content-Type': 'application/json'
       }
     }).then(() => {
+      setSnackBarText('Successful Account Creation!');
+      setOpenSnackBar(true);
       dispatch({ type: 'SET_EMAIL', payload: values.email });
       navigate('/login', { replace: true });
     });
@@ -195,6 +210,26 @@ const Register = () => {
           </Formik>
         </Container>
       </Box>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+        message={snackBarText}
+        action={(
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleCloseSnackBar}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      />
     </>
   );
 };

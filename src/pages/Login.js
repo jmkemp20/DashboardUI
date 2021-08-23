@@ -11,18 +11,27 @@ import {
   Grid,
   Link,
   TextField,
-  Typography
+  Typography,
+  Snackbar
 } from '@material-ui/core';
 import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackBarText, setSnackBarText] = useState('');
 
+  const handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handleLogin = (values) => {
-    setIsLoading(true);
     const newValues = {
       lastLogin: Math.floor(Date.now() / 1000),
       ...values
@@ -34,22 +43,20 @@ const Login = () => {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-      .then((res) => {
-        if (res.ok) {
-          res.json().then((data) => {
-            if (data) {
-              setIsLoading(false);
-              dispatch({ type: 'SET_EMAIL', payload: values.email });
-              dispatch({ type: 'SET_INFO_ON_LOGIN', payload: data });
-              dispatch({ type: 'SET_LOGGED_IN', payload: true });
-            }
-          });
-        } else {
-          console.log("unable to login");
-          setIsLoading(false);
-        }
-      });
+    }).then((res) => {
+      if (res.status === 200) {
+        res.json().then((data) => {
+          if (data) {
+            dispatch({ type: 'SET_EMAIL', payload: values.email });
+            dispatch({ type: 'SET_INFO_ON_LOGIN', payload: data });
+            dispatch({ type: 'SET_LOGGED_IN', payload: true });
+          }
+        });
+      } else {
+        setSnackBarText('Invalid Email or Password');
+        setOpenSnackBar(true);
+      }
+    });
   };
 
   return (
@@ -79,8 +86,9 @@ const Login = () => {
                 .required('Email is required'),
               password: Yup.string().max(255).required('Password is required')
             })}
-            onSubmit={(values) => {
+            onSubmit={(values, { setSubmitting, resetForm }) => {
               handleLogin(values);
+              resetForm();
               setSubmitting(false);
             }}
           >
@@ -157,6 +165,7 @@ const Login = () => {
                   type="email"
                   value={values.email}
                   variant="outlined"
+                  autoFocus
                 />
                 <TextField
                   error={Boolean(touched.password && errors.password)}
@@ -184,7 +193,8 @@ const Login = () => {
                   </Button>
                 </Box>
                 <Typography color="textSecondary" variant="body1">
-                  Don&apos;t have an account?{' '}
+                  Don&apos;t have an account?
+                  {' '}
                   <Link component={RouterLink} to="/register" variant="h6">
                     Sign up
                   </Link>
@@ -194,6 +204,26 @@ const Login = () => {
           </Formik>
         </Container>
       </Box>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        open={openSnackBar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackBar}
+        message={snackBarText}
+        action={(
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleCloseSnackBar}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      />
     </>
   );
 };

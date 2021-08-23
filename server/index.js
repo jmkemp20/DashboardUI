@@ -87,12 +87,12 @@ app.post('/login', (req, res) => {
             classes: user.classes
           };
           res.send(data);
-        } else {
+        } else { // Invalid Password
           res.sendStatus(201);
         }
       });
-    } else {
-      res.send(false);
+    } else { // No email
+      res.sendStatus(201);
     }
   });
 });
@@ -298,28 +298,6 @@ app.post('/newBookAuto', async (req, res) => {
             }
           });
         } else {
-          const tempBook = new Book({
-            _id: mongoose.Types.ObjectId(),
-            parent_id: userId,
-            authors: "",
-            title: response.data.title,
-            description: 'No Description Found',
-            copies: 1,
-            publisher:
-              response.data.publishers.length > 0
-                ? response.data.publishers[0]
-                : '',
-            publish_date: response.data.publish_date,
-            pages: response.data.number_of_pages,
-            isbn10:
-              'isbn_10' in response.data
-                ? response.data.isbn_10[0]
-                : '',
-            isbn13:
-              'isbn_13' in response.data
-                ? response.data.isbn_13[0]
-                : ''
-          });
           const myQuery =
             isbn.length == 10 ? { isbn10: isbn } : { isbn13: isbn };
           Book.findOne(myQuery, (newErr, book) => {
@@ -329,7 +307,7 @@ app.post('/newBookAuto', async (req, res) => {
               book.save((err) => {
                 if (err) return res.sendStatus(500);
   
-                console.log(`Success Auto Updated: ${tempBook.title}`);
+                console.log(`Success Auto Updated: ${book.title}`);
                 const tempData = {
                   statusCode: 201,
                   returnBody: {
@@ -340,6 +318,28 @@ app.post('/newBookAuto', async (req, res) => {
                 return res.send(tempData);
               });
             } else {
+              const tempBook = new Book({
+                _id: mongoose.Types.ObjectId(),
+                parent_id: userId,
+                authors: 'No Author Found',
+                title: response.data.title,
+                description: 'No Description Found',
+                copies: 1,
+                publisher:
+                  response.data.publishers.length > 0
+                    ? response.data.publishers[0]
+                    : '',
+                publish_date: response.data.publish_date,
+                pages: response.data.number_of_pages,
+                isbn10:
+                  'isbn_10' in response.data
+                    ? response.data.isbn_10[0]
+                    : ISBNConverter.toIsbn10(String(response.data.isbn_13[0])),
+                isbn13:
+                  'isbn_13' in response.data
+                    ? response.data.isbn_13[0]
+                    : ISBNConverter.toIsbn13(String(response.data.isbn_10[0]))
+              });
               tempBook.save((err) => {
                 if (err) return res.sendStatus(500);
   

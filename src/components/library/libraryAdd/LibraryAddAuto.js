@@ -78,9 +78,10 @@ const LibraryAddAuto = () => {
         validationSchema={Yup.object().shape({
           isbn: Yup.string().min(10).max(13).required('ISBN is required')
         })}
-        onSubmit={(values) => {
+        onSubmit={(values, { resetForm }) => {
           setIsLoading(true);
           handleNewBook(values);
+          resetForm();
         }}
       >
         {({
