@@ -43,7 +43,10 @@ const StudentsWithBooks = (...props) => {
         </Grid>
         <Box sx={{ pt: 3 }}>
           <LinearProgress
-            value={(numStudentsWithBooks / numStudents) * 100}
+            value={
+              (numStudentsWithBooks / (numStudents === 0 ? 1 : numStudents))
+              * 100
+            }
             variant="determinate"
           />
         </Box>

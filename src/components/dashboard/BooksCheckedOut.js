@@ -26,7 +26,9 @@ const BooksCheckedOut = (...props) => {
               TOTAL BOOKS CHECKED OUT
             </Typography>
             <Typography color="textPrimary" variant="h1">
-              {`(${numBooksCheckedOut}) ${((numBooksCheckedOut / numBooks) * 100
+              {`(${numBooksCheckedOut}) ${(
+                (numBooksCheckedOut / (numBooks === 0 ? 1 : numBooks))
+                * 100
               ).toFixed(2)}%`}
             </Typography>
           </Grid>
@@ -44,7 +46,8 @@ const BooksCheckedOut = (...props) => {
         </Grid>
         <Box sx={{ pt: 3 }}>
           <LinearProgress
-            value={(numBooksCheckedOut / numBooks) * 100}
+            value={((numBooksCheckedOut / (numBooks === 0 ? 1 : numBooks))
+              * 100)}
             variant="determinate"
           />
         </Box>

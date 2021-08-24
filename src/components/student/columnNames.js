@@ -1,9 +1,5 @@
 function getBookListLength(params) {
-  let length = 0;
-  const list = String(params.getValue(params.id, 'book_list')).split(',');
-  if (list[0] === '') length = 0;
-  else length = list.length;
-  return `${length}`;
+  return `${params.row.book_list.length}`;
 }
 
 export default [

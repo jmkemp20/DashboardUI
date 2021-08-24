@@ -10,7 +10,7 @@ import {
   CircularProgress
 } from '@material-ui/core';
 import TotalBooks from 'src/components/dashboard/TotalBooks';
-import Sales from 'src/components/dashboard//Sales';
+import CheckoutChart from 'src/components/dashboard/CheckoutChart';
 import BooksCheckedOut from 'src/components/dashboard/BooksCheckedOut';
 import TotalStudents from 'src/components/dashboard/TotalStudents';
 import StudentsWithBooks from 'src/components/dashboard/StudentsWithBooks';
@@ -115,7 +115,7 @@ const Dashboard = () => {
                 <StudentsWithBooks />
               </Grid>
               <Grid item lg={8} md={12} xl={9} xs={12}>
-                <Sales />
+                <CheckoutChart />
               </Grid>
               <Grid item lg={4} md={6} xl={3} xs={12}>
                 <TrafficByClassroom sx={{ height: '100%' }} />
