@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
 const axios = require('axios');
@@ -7,13 +6,20 @@ const ISBNConverter = require('simple-isbn').isbn;
 const { Book } = require('./models/book-model');
 const { User } = require('./models/user-model');
 const { Student } = require('./models/student-model');
+//const cors = require('cors');
 const PORT = process.env.PORT || 5000;
+
+const path = require('path');
 const buildPath = path.join(__dirname, '..', 'build');
 app.use(express.static(buildPath));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(buildPath + '/index.html'));
 });
+
+// app.use(cors());
+app.use(express.urlencoded());
+app.use(express.json());
 
 mongoose
   .connect(
@@ -35,9 +41,6 @@ db.on('connected', () => {
 });
 
 db.on('error', console.error.bind(console, 'connection error:'));
-
-app.use(express.urlencoded());
-app.use(express.json());
 
 app.post('/register', (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -225,7 +228,7 @@ app.post('/newBook', (req, res) => {
   });
 });
 
-app.post('/newBookAuto', async (req, res) => {
+app.post('/newBookAuto', (req, res) => {
   const { userId, isbn } = req.body;
   if (isValidISBN(isbn)) {
     const bookuri = 'https://openlibrary.org/isbn/' + isbn + '.json';
@@ -244,19 +247,19 @@ app.post('/newBookAuto', async (req, res) => {
                 description: 'No Description Found',
                 copies: 1,
                 publisher:
-                  response.data.publishers.length > 0
+                  'publishers' in response.data
                     ? response.data.publishers[0]
                     : '',
                 publish_date: response.data.publish_date,
                 pages: response.data.number_of_pages,
                 isbn10:
-                  response.data.isbn_10.length > 0
+                  'isbn_10' in response.data
                     ? response.data.isbn_10[0]
-                    : '',
+                    : ISBNConverter.toIsbn10(String(response.data.isbn_13[0])),
                 isbn13:
-                  response.data.isbn_13.length > 0
+                  'isbn_13' in response.data
                     ? response.data.isbn_13[0]
-                    : ''
+                    : ISBNConverter.toIsbn13(String(response.data.isbn_10[0]))
               });
               const myQuery =
                 isbn.length == 10 ? { isbn10: isbn } : { isbn13: isbn };
